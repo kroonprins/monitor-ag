@@ -38,6 +38,7 @@ export class RequestCountsChartComponent implements OnInit {
         for (let type of this.types) {
           this.angularFirestore
             .doc(`requestCounts/${type.id}`)
+            // .doc(`responseTimes/${type.id}`)
             .collection('measurements', ref => ref.orderBy('timestamp').limit(100))
             .valueChanges()
             .forEach(val => {
