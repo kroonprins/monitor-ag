@@ -18,6 +18,7 @@ export class RequestCountsChartComponent implements OnInit {
 
   private colors = [ '#7F7F7F', '#B9F442', '#17BECF' ]; // TODO add more
   private colorGenerator; // TODO make service
+  private colorMapping = {}
 
   constructor(private angularFirestore: AngularFirestore) {
     this.colorGenerator = this.generateColor();
@@ -39,7 +40,7 @@ export class RequestCountsChartComponent implements OnInit {
           this.angularFirestore
             .doc(`requestCounts/${type.id}`)
             // .doc(`responseTimes/${type.id}`)
-            .collection('measurements', ref => ref.orderBy('timestamp').limit(100))
+            .collection('measurements', ref => ref.orderBy('timestamp')/*.limit(100)*/)
             .valueChanges()
             .forEach(val => {
               this.createChartData(val, type);
@@ -55,13 +56,18 @@ export class RequestCountsChartComponent implements OnInit {
       x.push(<Timestamp>(measurement['timestamp']).toDate())
       y.push(measurement['value'])
     }
+    let color = this.colorMapping[type.id];
+    if(!color) {
+      color = this.colorGenerator.next().value
+      this.colorMapping[type.id] = color
+    }
     this.chartData[type.id] = {
       x: x,
       y: y,
       type: 'scatter',
       mode: 'lines',
       name: type.description,
-      line: { color: this.colorGenerator.next().value }
+      line: { color: color }
     }
   }
 

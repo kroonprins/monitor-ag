@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase": "^5.2.0"
+    "axios": "^0.18.0",
+    "xmldom": "^0.1.27",
+    "xpath": "0.0.27"
   }
 }
