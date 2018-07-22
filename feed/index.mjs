@@ -71,9 +71,10 @@ const constructInputBodyForFirebaseFunction = (measurementsXml) => {
           value: Number(node.attributes.getNamedItem(aggregation.xmlAttribute).value)
         }
       })
-      // Remove last 2 measurements because they are probably still intermediate values
+      // Remove last 3 measurements because they are probably still intermediate values
       measurements.pop()
       measurements.pop()
+      measurements.pop() // plopperdepop
       if(measurements && measurements.length > 0) {
         measurementsToSend = true
         inputForAggregation[type] = measurements
