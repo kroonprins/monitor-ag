@@ -1,11 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { MatMenuModule, MatIconModule } from '@angular/material';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule, MatInputModule, MatButtonModule, MatCardModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 
 import { RequestCountsChartComponent } from './request-counts/components/request-counts-chart.component';
@@ -22,10 +24,14 @@ import { ResponseTimesChartComponent } from './response-times/components/respons
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FormsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule
-    // MatMenuModule,
-    // MatIconModule
+    AngularFirestoreModule,
+    AngularFireAuthModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

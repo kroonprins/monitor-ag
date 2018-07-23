@@ -1,7 +1,6 @@
 * update angular.json to only include specific part of plotly that is needed
 * check if not possible to use cdn for some parts of ui
 * linting, editorconfig
-* authentication
 * use models in typescript code
 * pwa
 * make separate npm modules for "wait" and "write queue"

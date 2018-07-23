@@ -1,0 +1,17 @@
+.login-card {
+  max-width:  90%;
+  width: 500px
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form > * {
+  width: 100%;
+}
+
+.logout-button {
+  margin-bottom: 30px;
+}

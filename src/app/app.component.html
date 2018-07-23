@@ -1,4 +1,24 @@
-<app-request-counts-chart></app-request-counts-chart>
+<div *ngIf="afAuth.user | async as user; else showLogin">
+  <button (click)="logout()" mat-raised-button class="logout-button">Logout</button>
+  <app-request-counts-chart></app-request-counts-chart>
+  <app-response-times-chart></app-response-times-chart>
+</div>
+<ng-template #showLogin>
+  <mat-card class="login-card">
+    <form #loginForm="ngForm">
+      <mat-card-content class="login-form">
+        <mat-form-field>
+          <input matInput placeholder="User" [(ngModel)]="user" name="user" required>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Password" [(ngModel)]="password" name="password" type="password" required/>
+        </mat-form-field>
 
-<app-response-times-chart></app-response-times-chart>
-
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button (click)="login()" [disabled]="!loginForm.form.valid" *ngIf="!invalidCredentials">Login</button>
+        <button mat-raised-button (click)="login()" [disabled]="!loginForm.form.valid" *ngIf="invalidCredentials" color="warn">Login failed!</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</ng-template>

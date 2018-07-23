@@ -2,9 +2,14 @@ import fs from 'fs'
 import axios from 'axios'
 import xpath from 'xpath'
 import xmldom from 'xmldom'
+import prompt from 'prompt'
+import util from 'util'
 import TIMESTAMPS_LAST_UPLOADED_MEASUREMENT from './last_timestamps'
 
 const fsPromises = fs.promises
+const promptGet = util.promisify(prompt.get)
+
+let THE_MAGIC_PASSWORD
 
 // Interval to retrieve and upload new measurements
 const INTERVAL = 30000
@@ -57,7 +62,9 @@ const flushTimestampLastUploadedMeasurementToDisk = () => {
 }
 
 const constructInputBodyForFirebaseFunction = (measurementsXml) => {
-  const inputBody = {}
+  const inputBody = {
+    auth: THE_MAGIC_PASSWORD
+  }
   let measurementsToSend = false
   for (let aggregation of AGGREGATIONS) {
     const inputForAggregation = {}
@@ -71,11 +78,12 @@ const constructInputBodyForFirebaseFunction = (measurementsXml) => {
           value: Number(node.attributes.getNamedItem(aggregation.xmlAttribute).value)
         }
       })
-      // Remove last 3 measurements because they are probably still intermediate values
+      // Remove last 4 measurements because they are probably still intermediate values
+      measurements.pop()
       measurements.pop()
       measurements.pop()
       measurements.pop() // plopperdepop
-      if(measurements && measurements.length > 0) {
+      if (measurements && measurements.length > 0) {
         measurementsToSend = true
         inputForAggregation[type] = measurements
 
@@ -104,6 +112,22 @@ const wait = async (secs) => {
   })
 }
 
+const askPassword = async () => {
+  prompt.message=''
+  prompt.delimiter=''
+  prompt.start()
+  const password = await promptGet({
+    description: 'Enter password: ',
+    type: 'string',
+    pattern: /^\w+$/,
+    message: 'Password is mandatory',
+    hidden: true,
+    replace: '*',
+    required: true
+  })
+  return password.question
+}
+
 const main = async () => {
   console.debug('Start iteration')
 
@@ -115,7 +139,7 @@ const main = async () => {
   const { inputBody, measurementsToSend } = constructInputBodyForFirebaseFunction(measurementsXml)
   console.debug('Created input body', JSON.stringify(inputBody), measurementsToSend)
 
-  if(measurementsToSend) {
+  if (measurementsToSend) {
     try {
       await callFirebaseFunction(inputBody)
       console.log(`Measurements for ${measurementsFile} uploaded`)
@@ -131,6 +155,7 @@ const main = async () => {
 }
 
 (async () => {
+  THE_MAGIC_PASSWORD = await askPassword()
   while (true) {
     const now = new Date()
     try {
