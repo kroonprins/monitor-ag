@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { RequestCountsChartComponent } from './request-counts/components/request-counts-chart.component';
 import { LineChartComponent } from './shared/components/line-chart.component';
 import { ResponseTimesChartComponent } from './response-times/components/response-times-chart.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ResponseTimesChartComponent } from './response-times/components/respons
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [],
   bootstrap: [AppComponent]
