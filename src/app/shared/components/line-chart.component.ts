@@ -64,7 +64,17 @@ export class LineChartComponent implements OnInit {
       this.el.nativeElement,
       Object.values(this.chartData),
       {
-        title: this.title
+        title: this.title,
+        showlegend: true,
+        legend: {
+          x: 0,
+          y: 1,
+          "orientation": "h"
+        },
+        margin: {
+          l: 40,
+          r: 10
+        }
       }
     );
   }
